@@ -1,0 +1,25 @@
+from django.shortcuts import render, redirect
+from .models import Task
+from .forms import TaskForm
+
+def task_list_and_create(request):
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('crud:crud_list')
+    else:
+        form = TaskForm()
+        
+    #tasks = Task.objects.all()
+    complete_task = Task.objects.filter(is_completed=True)
+    incomplete_task = Task.objects.filter(is_completed=False)
+
+    return render(request, 'task_list.html', {
+        'form': form,
+        #'tasks': tasks
+        'complete_task': complete_task,
+        'incomplete_task': incomplete_task,
+    })
+ 
